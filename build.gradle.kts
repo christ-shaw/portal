@@ -33,8 +33,11 @@ dependencies {
     implementation ("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-apache:$ktor_version")
     implementation("io.ktor:ktor-client-jackson:$ktor_version")
+    implementation("io.ktor:ktor-client-logging:$ktor_version")
     implementation("io.ktor:ktor-velocity:$ktor_version")
     implementation("wu-cas:wu-cas-filter:0.1.10")
+    implementation("io.ktor:ktor-server-sessions:$ktor_version")
+    implementation("com.jayway.jsonpath:json-path:2.5.0")
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
 
 
