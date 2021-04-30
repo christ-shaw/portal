@@ -11,7 +11,10 @@ import io.ktor.request.*
 import io.ktor.sessions.*
 import io.ktor.velocity.*
 import xzb.com.service.EurekaSvc
+import xzb.com.service.JenkinsSvc
+import xzb.com.service.SubwaySvc
 import xzb.com.session.PortalSession
+import java.util.*
 
 fun Application.configureRouting() {
     install(Locations) {
@@ -19,7 +22,7 @@ fun Application.configureRouting() {
 
     routing {
         static("assets") {
-            resources("css")
+            resources("assets")
         }
         authenticate("form") {
             post("/login") {
@@ -48,10 +51,39 @@ fun Application.configureRouting() {
             }
             else
             {
-                val onlineServices = EurekaSvc().getOnlineServices();
-                call.respond(onlineServices)
+                 val onlineServices = EurekaSvc().getOnlineServices();
+//                val jobs = jenkinsClient.getJobs()
+               // jobs.forEach { (_, u) -> log.debug("duration =  ${u.details().lastBuild.details().duration}, time = ${Date(u.details().lastBuild.details().timestamp)}")}
+                call.respond(VelocityContent("templates/index.vm", mutableMapOf("apps" to onlineServices.applications.application)))
             }
         }
+        get("/jenkins")
+        {
+            val session = call.sessions.get<PortalSession>()
+            if (session == null)
+            {
+                call.respondRedirect("login")
+            }
+            else
+            {
+                val jenkinsClient = JenkinsSvc().createJenkinsClient()
+//                val jobs = jenkinsClient.getJobs()
+                // jobs.forEach { (_, u) -> log.debug("duration =  ${u.details().lastBuild.details().duration}, time = ${Date(u.details().lastBuild.details().timestamp)}")}
+                call.respond(VelocityContent("templates/jenkins.vm", mutableMapOf("jobs" to jenkinsClient.jobs)))
+            }
+        }
+
+        get("subways")
+        {
+            val session = call.sessions.get<PortalSession>()
+            if (session == null)
+            {
+                call.respondRedirect("login")
+            }
+            val subways = SubwaySvc().generateSubways()
+            call.respond(VelocityContent("templates/subway.vm", mutableMapOf("subways" to subways)))
+        }
+
 
 
 //        get<MyLocation> {

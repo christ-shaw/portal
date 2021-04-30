@@ -51,15 +51,15 @@
             <ul class="nav">
 
                 <li class="nav-item active">
-                    <a class="nav-link" href="/">
+                    <a class="nav-link" href="./index.vm">
                         <i class="nc-icon nc-notes"></i>
                         <p>服务列表</p>
                     </a>
                 </li>
-                <li>
+                <li class="nav-item active">
                     <a class="nav-link" href="/jenkins">
-                        <i class="nc-icon nc-bell-55"></i>
-                        <p>Jenkins 编译</p>
+                        <i class="nc-icon nc-notes"></i>
+                        <p>版本构建列表 </p>
                     </a>
                 </li>
                 <li>
@@ -68,6 +68,12 @@
                         <p>地铁线路</p>
                     </a>
                 </li>
+                ##                <li>
+                ##                    <a class="nav-link" href="./notifications.html">
+                ##                        <i class="nc-icon nc-bell-55"></i>
+                ##                        <p>Notifications</p>
+                ##                    </a>
+                ##                </li>
             </ul>
         </div>
     </div>
@@ -75,7 +81,7 @@
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg " color-on-scroll="500">
             <div class="container-fluid">
-                <a class="navbar-brand"> 服务列表 </a>
+                <a class="navbar-brand">版本构建列表</a>
                 <button href="" class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
                         aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-bar burger-lines"></span>
@@ -147,43 +153,26 @@
                     <div class="col-md-12">
                         <div class="card strpied-tabled-with-hover">
                             <div class="card-header ">
-                                <h4 class="card-title">Eureka 服务列表</h4>
-                                <p class="card-category">$apps.getClass().getName()</p>
+                                <h4 class="card-title">构建列表</h4>
+                                <p class="card-category">$jobs.getClass().getName()</p>
                             </div>
                             <div class="card-body table-full-width table-responsive">
                                 <table class="table table-hover table-striped">
                                     <thead>
                                     <th>ID</th>
-                                    <th>服务名称</th>
-                                    <th>服务器地址</th>
-                                    <th>服务注册时间</th>
-                                    <th>服务启动时间</th>
+                                    <th>构建名称</th>
+                                    <th>上次构建状态</th>
                                     </thead>
                                     <tbody>
                                         #set($index = 0)
-                                        #foreach ( $app in $apps)
-                                            #foreach($i in $app.instance)
-                                                #set($index = $index + 1)
-                                            <tr>
-                                                <td>$index</td>
-                                                <td>$app.name</td>
-                                                <td>${i.homePageUrl}</td>
-                                                <td>${i.leaseInfo.registrationTime}</td>
-                                                <td>${i.leaseInfo.serviceUpTime}</td>
-                                            </tr>
-                                            #end
+                                        #foreach ( $entry in $jobs.entrySet())
+                                            #set($index = $index + 1)
+                                        <tr>
+                                            <td>$index</td>
+                                            <td>$entry.getValue().getName()</td>
 
-                                            ##                                        #foreach($i in $app.instance)
-                                            ##                                        <tr>
-                                            ##                                            <td>$velocityCount</td>
-                                            ##                                            <td>${i.homePageUrl}</td>
-                                            ##                                            <td>${i.leaseInfo.registrationTime}</td>
-                                            ##                                            <td>${i.leaseInfo.serviceUpTime}</td>
-                                            ##                                        </tr>
-                                            ##                                        #end
+                                        </tr>
                                         #end
-
-
                                 </table>
                             </div>
                         </div>

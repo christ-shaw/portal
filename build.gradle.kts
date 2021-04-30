@@ -37,7 +37,9 @@ dependencies {
     implementation("io.ktor:ktor-velocity:$ktor_version")
     implementation("wu-cas:wu-cas-filter:0.1.10")
     implementation("io.ktor:ktor-server-sessions:$ktor_version")
-    implementation("com.jayway.jsonpath:json-path:2.5.0")
+    implementation("com.offbytwo.jenkins:jenkins-client:0.3.8")
+    implementation ("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.0")
+    implementation("khttp:khttp:1.0.0")
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
 
 
