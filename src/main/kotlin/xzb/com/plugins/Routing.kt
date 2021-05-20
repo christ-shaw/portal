@@ -10,10 +10,13 @@ import io.ktor.response.*
 import io.ktor.request.*
 import io.ktor.sessions.*
 import io.ktor.velocity.*
+import xzb.com.service.DataService
 import xzb.com.service.EurekaSvc
 import xzb.com.service.JenkinsSvc
 import xzb.com.service.SubwaySvc
 import xzb.com.session.PortalSession
+import java.io.File
+import java.net.URLEncoder
 import java.util.*
 
 fun Application.configureRouting() {
@@ -83,6 +86,36 @@ fun Application.configureRouting() {
             val subways = SubwaySvc().generateSubways()
             call.respond(VelocityContent("templates/subway.vm", mutableMapOf("subways" to subways)))
         }
+
+
+        // file upload
+        post("data/upload")
+        {
+            val multipart =  call.receiveMultipart()
+            multipart.forEachPart {
+                if (it is PartData.FileItem)
+                {
+                    DataService.upload(part = it)
+                }
+            }
+            call.respond(HttpStatusCode.OK,"upload file ok")
+        }
+
+        get("/data/download") {
+
+            val file = DataService.downLoad()
+            if (file.exists())
+            {
+                val fileName = URLEncoder.encode("${file.name}","utf-8")
+                call.response.header("Content-Disposition", "attachment; filename=\"$fileName\"")
+
+
+                call.respondFile(file)
+            }
+            else call.respond(HttpStatusCode.NotFound)
+        }
+
+
 
 
 

@@ -40,7 +40,13 @@ dependencies {
     implementation("com.offbytwo.jenkins:jenkins-client:0.3.8")
     implementation ("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.0")
     implementation("khttp:khttp:1.0.0")
+    implementation("org.apache.poi:poi:4.1.2")
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
 
+    implementation("org.jetbrains.exposed:exposed-core:0.31.1")
+    implementation("org.jetbrains.exposed:exposed-dao:0.31.1")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.31.1")
+    implementation ("mysql:mysql-connector-java:8.0.19")
+    implementation ("com.zaxxer:HikariCP:3.4.2")
 
 }
