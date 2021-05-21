@@ -3,6 +3,8 @@ package xzb.com.service
 import io.ktor.http.content.*
 import org.apache.poi.hssf.usermodel.HSSFSheet
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
+import org.apache.poi.ss.usermodel.Cell
+import org.apache.poi.ss.usermodel.CellType
 import xzb.com.database.DaoFacade
 import java.io.File
 import java.io.FileInputStream
@@ -55,20 +57,36 @@ private fun File.processExcel(): File {
     if (first.lastCellNum.equals(10) && first.getCell(6).stringCellValue == "PHONE") {
         throw RuntimeException("错误的excel模板文件")
     }
-    val emptyPhone = mutableMapOf<Int, String>()
+    val emptyPhone = mutableMapOf< String,Int>()
 
      sheet.rowIterator().withIndex().forEach {
          if(it.index != 0)
-         {
+          {
              if (it.value.getCell(6) == null
                  ||  it.value.getCell(6) .stringCellValue.isBlank()) {
-                 emptyPhone +=  it.index to it.value.getCell(5).stringCellValue
+                 emptyPhone +=  it.value.getCell(5).stringCellValue to it.index
              }
          }
-
     }
-    val mobiles = DaoFacade().getMobile(emptyPhone.values)
-    val downloadZFile = File("download/new.txt")
-    downloadZFile.writeText(mobiles.toString())
-    return downloadZFile
+
+    val mobiles = DaoFacade().getMobile(emptyPhone.keys)
+    return writeExcel(sheet,mobiles,emptyPhone)
+
+}
+
+fun writeExcel(sheet: HSSFSheet, mobiles: Map<String, String>, emptyPhone: Map<String, Int>): File {
+    mobiles.forEach {
+        val rowNumber = emptyPhone[it.key]!!
+        if (sheet.getRow(rowNumber).getCell(6) != null) {
+            sheet.getRow(rowNumber).getCell(6).setCellValue(it.value)
+        }
+        else
+        {
+            val createCell = sheet.getRow(rowNumber).createCell(6, CellType.STRING)
+            createCell.setCellValue(it.value)
+        }
+    }
+    val  f = File("downloads/重组案件办理数据提取-updated.xls")
+    sheet.workbook.write(f)
+    return f
 }
